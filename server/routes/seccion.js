@@ -19,11 +19,10 @@ router.get('/seccion', (req, res) => {
 //FUNCION N°2 => Agregar una nueva seccion
 router.post('/seccion', (req, res) => {
 
-    const Id = req.body.Id;
+    //const Id = 5;
     const Nombre = req.body.Nombre;
-    const Cantidad = req.body.Cantidad;
 
-    conexion.query("INSERT INTO seccion (Id, Nombre, Cantidad) VALUES (?, ?, ?)", [Id, Nombre, Cantidad], (err, rows) => {
+    conexion.query("INSERT INTO seccion (Nombre) VALUES (?)", [Nombre], (err, rows) => {
         if (!err) {
             res.json({ Status: 'Seccion creada con exito' });
             return;
