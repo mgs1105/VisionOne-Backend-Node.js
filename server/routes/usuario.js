@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 
 const conexion = require('./../database/database');
 
@@ -38,7 +39,11 @@ router.post('/usuario', (req, res) => {
     const Rol = req.body.Rol;
     const Password = req.body.Password;
 
-    conexion.query("INSERT INTO usuario (Rut, Rol, Password) VALUES (?, ?, ?)", [Rut, Rol, Password], (err, rows) => {
+    //encriptar Password
+    const vueltas = bcrypt.genSaltSync();
+    const pass = bcrypt.hashSync(Password, vueltas);
+
+    conexion.query("INSERT INTO usuario (Rut, Rol, Password) VALUES (?, ?, ?)", [Rut, Rol, pass], (err, rows) => {
         if (!err) {
             res.json({ Status: 'Usuario Agregado' });
         } else {
@@ -49,14 +54,17 @@ router.post('/usuario', (req, res) => {
 });
 
 //Funcion N°4 => Actualizamos un registro de la tabla usuario
-
 router.put('/usuario/:Rut', (req, res) => {
 
     const Rut = req.params.Rut;
     const Rol = req.body.Rol;
     const Password = req.body.Password;
 
-    conexion.query("UPDATE usuario set Rol = ?, Password = ? WHERE Rut = ?", [Rol, Password, Rut], (err, rows) => {
+    //encriptar password
+    const vueltas = bcrypt.genSaltSync();
+    const pass = bcrypt.hashSync(Password, vueltas);
+
+    conexion.query("UPDATE usuario set Rol = ?, Password = ? WHERE Rut = ?", [Rol, pass, Rut], (err, rows) => {
         if (!err) {
             res.json({ Status: 'Usuario Actualizado' });
         } else {
@@ -66,12 +74,11 @@ router.put('/usuario/:Rut', (req, res) => {
 });
 
 //Funcion N°5 => Eliminamos un registro de la tabla usuario
-
 router.delete('/usuario/:Rut', (req, res) => {
 
     const Rut = req.params.Rut;
 
-    conexion.query('DELETE FROM usuario WHERE Rut = ?', [Rut], (err, rows) => {
+    conexion.query("DELETE FROM usuario WHERE Rut = ?", [Rut], (err, rows) => {
         if (!err) {
             res.json({ Status: 'Usuario eliminado con exito' });
         } else {
@@ -81,5 +88,24 @@ router.delete('/usuario/:Rut', (req, res) => {
 
 });
 
+//Funcion N°6 => Login de usuario
+router.post('/login', (req, res) => {
+
+    let Rut = req.body.Rut;
+    let pass = req.body.Password;
+
+    conexion.query("SELECT * FROM usuario WHERE Rut = ?", [Rut], (err, rows, field) => {
+        if (err) {
+            console.log('Error', err);
+        } else {
+            if (bcrypt.compareSync(pass, rows[0].Password)) {
+                res.json(true)
+            } else {
+                res.json(false)
+            }
+        }
+    });
+
+});
 
 module.exports = router;

@@ -33,4 +33,19 @@ router.post('/seccion', (req, res) => {
 
 });
 
+//FUNCION N°3 => Eliminar una seccion
+router.delete('/seccion/:Id', (req, res) => {
+
+    const Id = req.params.Id;
+
+    conexion.query("DELETE FROM seccion WHERE Id = ?", [Id], (err, rows) => {
+        if (!err) {
+            res.json({ status: 'Seccion eliminada con exito' });
+        } else {
+            console.log(err);
+        }
+    });
+
+})
+
 module.exports = router;
