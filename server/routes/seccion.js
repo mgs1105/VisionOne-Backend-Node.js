@@ -9,6 +9,7 @@ router.get('/seccion', (req, res) => {
 
     //Creamos la consulta SQL a la base de datos.
     conexion.query("SELECT * FROM seccion", (err, rows, field) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
         if (!err) {
             res.json(rows);
         } else {
@@ -25,6 +26,7 @@ router.post('/seccion', (req, res) => {
 
     //realizamos la consulta SQL y creamos la nueva seccion
     conexion.query("INSERT INTO seccion (Nombre) VALUES (?)", [Nombre], (err, rows) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
         if (!err) {
             res.json({ Status: 'Seccion creada con exito' });
             return;
@@ -41,6 +43,7 @@ router.delete('/seccion/:Id', (req, res) => {
     const Id = req.params.Id;
 
     conexion.query("DELETE FROM seccion WHERE Id = ?", [Id], (err, rows) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo.        
         if (!err) {
             res.json({ status: 'Seccion eliminada con exito' });
         } else {

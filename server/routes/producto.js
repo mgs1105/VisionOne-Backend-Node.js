@@ -11,6 +11,7 @@ router.get('/producto', (req, res) => {
 
     //Creamos la consulta SQL a la base de datos.
     conexion.query("SELECT * FROM producto", (err, rows, field) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
         if (!err) {
             res.json(rows);
         } else {
@@ -33,6 +34,7 @@ router.post('/producto', (req, res) => {
 
     //definimos la consulta SQL a la base de datos para crear el producto.
     conexion.query("INSERT INTO producto (Nombre, StockA, StockB, StockC, Idseccion, fotoURL) VALUES (?, ?, ?, ?, ?, ?)", [Nombre, StockA, StockB, StockC, Idseccion, fotoURL], (err, rows) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
         if (!err) {
             res.json({ Status: 'Producto agregado con exito' });
             return;
@@ -57,6 +59,7 @@ router.put('/producto/:Id', (req, res) => {
 
     //creamos la consulta SQL para la base de datos. el orden es importante.
     conexion.query("UPDATE producto set StockA = ?, StockB = ?, StockC = ? WHERE Id = ?", [StockA, StockB, StockC, Id], (err, rows) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo.       
         if (!err) {
             res.json({ Status: 'Producto Actualizado' });
         } else {
@@ -74,6 +77,7 @@ router.delete('/producto/:Id', (req, res) => {
 
     //definimos la consulta SQL
     conexion.query("DELETE FROM producto WHERE Id = ?", [Id], (err, rows) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo.    
         if (!err) {
             res.json({ status: 'Producto eliminado con exito' });
         } else {
@@ -98,6 +102,7 @@ router.get('/producto/:query', (req, res) => {
 
     //creamos la consulta SQL a la base de datos.
     conexion.query("SELECT * FROM producto", (err, rows, field) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" ejecutara las siguientes lineas        
         if (!err) {
             //en este punto la variable "rows" contiene todos los productos de la bd sin filtrar 
             //con la propiedad ".filter" podemos filtrar los resultados obtenidos
