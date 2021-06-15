@@ -9,11 +9,11 @@ router.get('/seccion', (req, res) => {
 
     //Creamos la consulta SQL a la base de datos.
     conexion.query("SELECT * FROM seccion", (err, rows, field) => {
-        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
+        // al especificar un simbolo "!" antes del err, queremos decir: "si es que NO ocurre algun error" seguira con las lineas de codigo. 
         if (!err) {
-            res.json(rows);
+            res.json(rows); //envia la respuesta en formato json
         } else {
-            console.log('Error', err);
+            console.log('Error', err); //manda por consola el mensaje de "Error", seguido de todo el error que haya detectado node
         }
     });
 
