@@ -75,9 +75,10 @@ router.put('/usuario/:Rut', (req, res) => {
     //los valores que se modificaran seran recibidos desde el body.
     const Rut = req.params.Rut;
     const Rol = req.body.Rol;
+    const Bodega = req.body.Bodega;
 
     //Creamos la consulta SQL
-    conexion.query("UPDATE usuario set Rol = ? WHERE Rut = ?", [Rol, Rut], (err, rows) => {
+    conexion.query("UPDATE usuario set Rol = ?, Bodega = ? WHERE Rut = ?", [Rol, Bodega, Rut], (err, rows) => {
         if (!err) {
             res.json({ Status: 'Usuario Actualizado' });
         } else {
