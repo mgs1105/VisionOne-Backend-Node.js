@@ -5,5 +5,6 @@ const app = express();
 app.use(require('./usuario'));
 app.use(require('./seccion'));
 app.use(require('./producto'));
+app.use(require('./bodega'));
 
 module.exports = app;

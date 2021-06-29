@@ -25,15 +25,18 @@ router.get('/producto', (req, res) => {
 router.post('/producto', (req, res) => {
 
     //asignamos cada valor obtenido del body a una nueva constante para poder realizar un post y crear el producto en la base de datos
-    const Nombre = req.body.Nombre;
-    const StockA = req.body.StockA;
-    const StockB = req.body.StockB;
-    const StockC = req.body.StockC;
+    const Nombre = req.body.nombre;
+    const Arrendador = req.body.Arrendador;
+    const ServicioLiviano = req.body.ServicioLiviano;
+    const ServicioPesado = req.body.ServicioPesado;
     const Idseccion = req.body.Idseccion;
     const fotoURL = req.body.fotoURL;
+    const StockCritico = req.body.StockCritico;
+    const NParte = req.body.NParte;
+
 
     //definimos la consulta SQL a la base de datos para crear el producto.
-    conexion.query("INSERT INTO producto (Nombre, StockA, StockB, StockC, Idseccion, fotoURL) VALUES (?, ?, ?, ?, ?, ?)", [Nombre, StockA, StockB, StockC, Idseccion, fotoURL], (err, rows) => {
+    conexion.query("INSERT INTO producto (nombre, Arrendador, ServicioLiviano, ServicioPesado, Idseccion, fotoURL, StockCritico, NParte) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [Nombre, Arrendador, ServicioLiviano, ServicioPesado, Idseccion, fotoURL, StockCritico, NParte], (err, rows) => {
         // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
         if (!err) {
             res.json({ Status: 'Producto agregado con exito' });
@@ -53,12 +56,13 @@ router.put('/producto/:Id', (req, res) => {
     //los cambios que aplicara se reciben desde el body.
 
     const Id = req.params.Id;
-    const StockA = req.body.StockA;
-    const StockB = req.body.StockB;
-    const StockC = req.body.StockC;
+    const Arrendador = req.body.Arrendador;
+    const ServicioLiviano = req.body.ServicioLiviano;
+    const ServicioPesado = req.body.ServicioPesado;
+    const StockCritico = req.body.StockCritico;
 
     //creamos la consulta SQL para la base de datos. el orden es importante.
-    conexion.query("UPDATE producto set StockA = ?, StockB = ?, StockC = ? WHERE Id = ?", [StockA, StockB, StockC, Id], (err, rows) => {
+    conexion.query("UPDATE producto set Arrendador = ?, ServicioLiviano = ?, ServicioPesado = ?, StockCritico = ? WHERE Id = ?", [Arrendador, ServicioLiviano, ServicioPesado, StockCritico, Id], (err, rows) => {
         // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo.       
         if (!err) {
             res.json({ Status: 'Producto Actualizado' });
@@ -87,7 +91,7 @@ router.delete('/producto/:Id', (req, res) => {
 
 });
 
-//FUNCION N°5 => Obtenemos todos los registros de la tabla producto
+//FUNCION N°5 => Obtenemos registros filtrados de la tabla producto
 router.get('/producto/:query', (req, res) => {
 
     //esta peticion servira para el buscador de productos en general. Por eso debemos recibir el query (lo que el usuario escribe en el buscador)
@@ -106,12 +110,30 @@ router.get('/producto/:query', (req, res) => {
         if (!err) {
             //en este punto la variable "rows" contiene todos los productos de la bd sin filtrar 
             //con la propiedad ".filter" podemos filtrar los resultados obtenidos
-            //".filter" ejecuta una funcion, donde crea una variable "prod" que tomara el valor de cada producto donde su nombre coincida con la ExpReg que estamos enviando (query)
-            let productoFiltrado = rows.filter(prod => expresion.test(prod.Nombre));
+            //".filter" ejecuta una funcion, donde crea una variable "prod" que tomara el valor de cada producto donde su numero de parte coincida con la ExpReg que estamos enviando (query)
+            let productoFiltrado = rows.filter(prod => expresion.test(prod.NParte));
             //mandamos como respuesta los productos que coinciden.
             res.json(productoFiltrado);
         } else {
             console.log('Error', err);
+        }
+    });
+
+});
+
+//FUNCION N°6 => Crear nueva columna en tabla productos
+router.post('/crearColumn', (req, res) => {
+
+    const Nombre = req.body.Nombre;
+    const columna = Nombre.replace(/ /g, "");
+
+    conexion.query("ALTER TABLE producto ADD " + columna + " varchar(25)", (err, rows) => {
+        // al especificar un simbolo "!" antes del err, queremos decir "si es que NO ocurre algun error" seguira con las lineas de codigo. 
+        if (!err) {
+            res.json({ Status: 'Tabla modificada con exito' });
+            return;
+        } else {
+            console.log(err);
         }
     });
 

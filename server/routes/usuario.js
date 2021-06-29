@@ -43,6 +43,7 @@ router.post('/usuario', (req, res) => {
     const Rut = req.body.Rut;
     const Rol = req.body.Rol;
     const Password = req.body.Password;
+    const Bodega = req.body.Bodega;
 
     //encriptar Password
     //creamos una constante llamada "vueltas" que tendra las propiedades de la funcion genSaltSync.
@@ -57,7 +58,7 @@ router.post('/usuario', (req, res) => {
 
     //realizamos la consulta SQL para añadir un usuario.
     //OJO: el ultimo valor que se manda es "pass" y no "Password", osea, guardamos el pass encriptado en la BD
-    conexion.query("INSERT INTO usuario (Rut, Rol, Password) VALUES (?, ?, ?)", [Rut, Rol, pass], (err, rows) => {
+    conexion.query("INSERT INTO usuario (Rut, Rol, Password, Bodega) VALUES (?, ?, ?, ?)", [Rut, Rol, pass, Bodega], (err, rows) => {
         if (!err) {
             res.json({ Status: 'Usuario Agregado' });
         } else {
